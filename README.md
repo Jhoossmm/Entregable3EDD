@@ -1,2 +1,13 @@
-# Entregable3EDD
-Tablas Hash
+# Estructura de Datos, Entregable 3: Tablas Hash
+
+**Universidad de Concepción**
+
+**Facultad de Ingeniería - Ingeniería Civil Informática**
+
+**Asignatura:** Estructura de Datos (S1-2026) 
+
+**Docente:** José Sebastián Fuentes Sepúlveda 
+
+**Integrantes:**
+* Felipe Alejandro Tilleria Morales 
+* Jhostian Matías San Martín Morales 
