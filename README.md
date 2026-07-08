@@ -12,6 +12,6 @@
 * Felipe Alejandro Tilleria Morales 
 * Jhostian Matías San Martín Morales 
 
-**Ejecución**
-*g++ -O3 src/main.cpp src/csv_parser.cpp -o experimentacion
-*./experimentacion
+**Ejecución:**
+* g++ -O3 src/main.cpp src/csv_parser.cpp -o experimentacion
+* ./experimentacion
