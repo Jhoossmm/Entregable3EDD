@@ -101,12 +101,12 @@ int main() {
         // ====================================================================
         ClosedHashTable<long long> closed_quad_id(capacidad, hash_user_id, hash2_user_id, 1);
         runExperiment(exp, dataset_name, "ClosedHash_Quad_UserID", N, outCSV, [&](size_t i) {
-            closed_lin_id.insert(records[i].user_id);
+            closed_quad_id.insert(records[i].user_id);
         });
 
         ClosedHashTable<string> closed_quad_name(capacidad, hash_screen_name, hash2_screen_name, 1);
         runExperiment(exp, dataset_name, "ClosedHash_Quad_ScreenName", N, outCSV, [&](size_t i) {
-            closed_lin_name.insert(records[i].user_screen_name);
+            closed_quad_name.insert(records[i].user_screen_name);
         });
 
         // ====================================================================
