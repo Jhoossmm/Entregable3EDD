@@ -14,7 +14,8 @@ using namespace std::chrono;
 
 // Función auxiliar (Lambda como parámetro) para evitar repetir el ciclo de medición
 template<typename Func>
-void runExperiment(int exp, const string& dataset, const string& struct_name, 
+void runExperiment(int exp, const string& dataset, const string& struct_name,
+                   const string& key_name,
                    size_t total_records, ofstream& out, Func&& insert_func) {
     
     auto start = high_resolution_clock::now();
@@ -26,8 +27,9 @@ void runExperiment(int exp, const string& dataset, const string& struct_name,
         if ((i + 1) % 10000 == 0 || i == total_records - 1) {
             auto end = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(end - start).count();
-            // Imprime en formato: número_experimento; dataset; estructura_de_datos; cantidad_consultas; tiempo_ejecucion
-            out << exp << ";" << dataset << ";" << struct_name << ";" << (i + 1) << ";" << duration << "\n";
+            // Imprime en formato: número_experimento; dataset; estructura_de_datos; clave; cantidad_consultas; tiempo_ejecucion
+            out << exp << ";" << dataset << ";" << struct_name << ";" << key_name
+                << ";" << (i + 1) << ";" << duration << "\n";
         }
     }
 }
@@ -50,7 +52,7 @@ int main() {
     
     ofstream outCSV("resultados.csv");
     // Cabecera solicitada en la rúbrica
-    outCSV << "numero_experimento;dataset;estructura_de_datos;cantidad_consultas;tiempo_ejecucion_us\n";
+    outCSV << "numero_experimento;dataset;estructura_de_datos;clave;cantidad_consultas;tiempo_ejecucion_us\n";
 
     cout << "Iniciando bateria de experimentos (20 repeticiones)... Esto tomara un tiempo." << endl;
 
@@ -61,12 +63,12 @@ int main() {
         // 1. STL UNORDERED_MAP
         // ====================================================================
         unordered_map<long long, int> stl_id;
-        runExperiment(exp, dataset_name, "STL_UnorderedMap_UserID", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "STL_UnorderedMap", "user_id", N, outCSV, [&](size_t i) {
             stl_id[records[i].user_id]++;
         });
 
         unordered_map<string, int> stl_name;
-        runExperiment(exp, dataset_name, "STL_UnorderedMap_ScreenName", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "STL_UnorderedMap", "user_screen_name", N, outCSV, [&](size_t i) {
             stl_name[records[i].user_screen_name]++;
         });
 
@@ -74,12 +76,12 @@ int main() {
         // 2. HASHING ABIERTO (Encadenamiento)
         // ====================================================================
         OpenHashTable<long long> open_id(capacidad, hash_user_id);
-        runExperiment(exp, dataset_name, "OpenHash_UserID", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "OpenHash", "user_id", N, outCSV, [&](size_t i) {
             open_id.insert(records[i].user_id);
         });
 
         OpenHashTable<string> open_name(capacidad, hash_screen_name);
-        runExperiment(exp, dataset_name, "OpenHash_ScreenName", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "OpenHash", "user_screen_name", N, outCSV, [&](size_t i) {
             open_name.insert(records[i].user_screen_name);
         });
 
@@ -87,12 +89,12 @@ int main() {
         // 3. HASHING CERRADO (Linear Probing = 0)
         // ====================================================================
         ClosedHashTable<long long> closed_lin_id(capacidad, hash_user_id, hash2_user_id, 0);
-        runExperiment(exp, dataset_name, "ClosedHash_Linear_UserID", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "ClosedHash_Linear", "user_id", N, outCSV, [&](size_t i) {
             closed_lin_id.insert(records[i].user_id);
         });
 
         ClosedHashTable<string> closed_lin_name(capacidad, hash_screen_name, hash2_screen_name, 0);
-        runExperiment(exp, dataset_name, "ClosedHash_Linear_ScreenName", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "ClosedHash_Linear", "user_screen_name", N, outCSV, [&](size_t i) {
             closed_lin_name.insert(records[i].user_screen_name);
         });
 
@@ -100,12 +102,12 @@ int main() {
         // 4. HASHING CERRADO (Quadratic Probing = 1)
         // ====================================================================
         ClosedHashTable<long long> closed_quad_id(capacidad, hash_user_id, hash2_user_id, 1);
-        runExperiment(exp, dataset_name, "ClosedHash_Quad_UserID", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "ClosedHash_Quad", "user_id", N, outCSV, [&](size_t i) {
             closed_quad_id.insert(records[i].user_id);
         });
 
         ClosedHashTable<string> closed_quad_name(capacidad, hash_screen_name, hash2_screen_name, 1);
-        runExperiment(exp, dataset_name, "ClosedHash_Quad_ScreenName", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "ClosedHash_Quad", "user_screen_name", N, outCSV, [&](size_t i) {
             closed_quad_name.insert(records[i].user_screen_name);
         });
 
@@ -113,12 +115,12 @@ int main() {
         // 5. HASHING CERRADO (Double Hashing = 2)
         // ====================================================================
         ClosedHashTable<long long> closed_dh_id(capacidad, hash_user_id, hash2_user_id, 2);
-        runExperiment(exp, dataset_name, "ClosedHash_Double_UserID", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "ClosedHash_Double", "user_id", N, outCSV, [&](size_t i) {
             closed_dh_id.insert(records[i].user_id);
         });
 
         ClosedHashTable<string> closed_dh_name(capacidad, hash_screen_name, hash2_screen_name, 2);
-        runExperiment(exp, dataset_name, "ClosedHash_Double_ScreenName", N, outCSV, [&](size_t i) {
+        runExperiment(exp, dataset_name, "ClosedHash_Double", "user_screen_name", N, outCSV, [&](size_t i) {
             closed_dh_name.insert(records[i].user_screen_name);
         });
     }
