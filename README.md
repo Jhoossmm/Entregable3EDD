@@ -13,5 +13,5 @@
 * Jhostian Matías San Martín Morales 
 
 **Ejecución:**
-* g++ -O3 src/main.cpp src/csv_parser.cpp -o experimentacion
+* g++ -O3 src/main.cpp src/csv_parser.cpp src/metrics.cpp -o experimentacion
 * ./experimentacion
