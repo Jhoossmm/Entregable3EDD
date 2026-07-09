@@ -8,6 +8,7 @@
 #include "../include/hash_functions.h"
 #include "../include/open_hash_table.h"
 #include "../include/closed_hash_table.h"
+#include "../include/metrics.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -126,6 +127,8 @@ int main() {
     }
 
     outCSV.close();
+    writeSummaryCSV("resultados.csv", "resultados_metricas.csv");
     cout << "Experimentos finalizados. Resultados exportados a 'resultados.csv'" << endl;
+    cout << "El resumen estadistico esta en 'resultados_metricas.csv'" << endl;
     return 0;
 }
