@@ -15,3 +15,5 @@
 **Ejecución:**
 * g++ -O3 src/main.cpp src/csv_parser.cpp -o experimentacion
 * ./experimentacion
+
+*En la rama metrics, es posible obtener directamente otro csv con tiempos promedio y desviacion estandar, ademas de un script en python para realizar graficos basados en este csv*
